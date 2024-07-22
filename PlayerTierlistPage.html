@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AOTTG Bomb Tier List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AOTTG Bomb Tier List</h1>
+        <p>Made By Sharp</p>
+
+        <!--This is to navigate between the Tabs-->
+        <div class="nav">
+            <button onclick="navigateTo('index.html')">Main Page</button>
+            <button onclick="navigateTo('AddPlayerPage.html')">Add Player</button>
+            <button onclick="navigateTo('PlayerTierlistPage.html')">Player Tierlist</button>
+            <button onclick="navigateTo('TopPlayersPage.html')">Top Players</button>
+            <button onclick="navigateTo('DuelResultsPage.html')">Duel Results</button>
+            <button onclick="navigateTo('DuelScorePage.html')">Duel Tierlist</button>
+        </div>
+
+        <!--Tierlist Design-->
+        <div class="tier-list" id="tier-list">
+            <h2>Player Tierlist</h2>
+            <p>Search for a Name to display their stats!</p>
+
+            <!--This is a search function to display a players stats-->
+            <div class="search-container">
+                <input type="text" id="search-player-stats" placeholder="Enter Player Name">
+                <button onclick="displayPlayerStats()">Display Stats</button>
+            </div>
+
+            <!--This is a search function to display a players stats-->
+            <div class="player-stats" id="player-stats" hidden>
+                <h3>Player Stats</h3>
+                <p id="player-stats-content"></p>
+            </div>
+
+            <div class="tiers">
+                <div class="tier" id="tier-X">
+                    <h3>X-Tier: Legendary Players</h3>
+                    <p>Players who have mastered Bomb Mode beyond inhuman levels, excelling in every game they play with unmatched strategic execution and skill.</p>
+                </div>
+                <div class="tier" id="tier-SS">
+                    <h3>SS-Tier: Elite Players</h3>
+                    <p>Players with exceptional skills, demonstrating elite-level performance, tactical brilliance, and consistency.</p>
+                </div>
+                <div class="tier" id="tier-S">
+                    <h3>S-Tier: High-Level Players</h3>
+                    <p>Players who showcase impressive performance and skills, standing out in most situations with their strategic prowess.</p>
+                </div>
+                <div class="tier" id="tier-A">
+                    <h3>A-Tier: Above Average Players</h3>
+                    <p>Players who show strong performance but still lack the consistency and finesse needed for higher tiers.</p>
+                </div>
+                <div class="tier" id="tier-B">
+                    <h3>B-Tier: Average Players</h3>
+                    <p>Players performing at an average level, demonstrating solid skills but needing improvement in key areas.</p>
+                </div>
+                <div class="tier" id="tier-C">
+                    <h3>C-Tier: Below Average Players</h3>
+                    <p>Players showing potentia but needing significant development in strategy and execution.</p>
+                </div>
+                <div class="tier" id="tier-D">
+                    <h3>D-Tier: Low-Level Players</h3>
+                    <p>Low-level players  who are still developing their skills and have noticeable gaps in their strategic approach.</p>
+                </div>
+                <div class="tier" id="tier-E">
+                    <h3>E-Tier: Very Low-Level Players</h3>
+                    <p>Newer players in Bomb Mode who are learning the basics and will improve their strategy and skills over time to reach higher tiers.</p>
+                </div>
+            </div>
+        </div>
+
+    <script src="utils.js"></script>
+    <script>
+        // Initialize players from local storage
+        const players = loadData('PlayerData') || [];
+        
+        function displayPlayers() {
+            const tiers = {
+                'X': [],
+                'SS': [],
+                'S': [],
+                'A': [],
+                'B': [],
+                'C': [],
+                'D': [],
+                'E': []
+            };
+
+            players.forEach(player => {
+                const avgRank = (rankToValue(player.speed) + rankToValue(player.endurance) + rankToValue(player.combat) + rankToValue(player.tactical) + rankToValue(player.adaptability) + rankToValue(player.knowledge)) / 6;
+                const tier = valueToRank(avgRank);
+                player.rank = tier;
+                tiers[tier].push(player);
+            });
+
+            saveData('PlayerData', players);
+
+            for (const tier in tiers) {
+                const tierElement = document.getElementById(`tier-${tier}`);
+                 // Preserve the existing description (contents of <p> elements) and add players
+            const descriptionHtml = tierElement.querySelector('p').innerHTML;
+            const playersHtml = tiers[tier].map(player => `<div class="player">${player.name}</div>`).join('');
+            
+            // Combine the preserved description with the updated players list
+            tierElement.innerHTML = `<h3>${tier}-Tier: ${getTierDescription(tier)}</h3><p>${descriptionHtml}</p>${playersHtml}`;
+     
+            }
+
+            // updateTopPlayers();
+        }
+
+        function rankToValue(rank) {
+            const values = {
+                'X':8,
+                'SS': 7,
+                'S': 6,
+                'A': 5,
+                'B': 4,
+                'C': 3,
+                'D': 2,
+                'E': 1
+            };
+            return values[rank];
+        }
+
+        function valueToRank(value) {
+            if (value >= 7.5) return 'X';
+            if (value >= 6.5) return 'SS';
+            if (value >= 5.5) return 'S';
+            if (value >= 4.5) return 'A';
+            if (value >= 3.5) return 'B';
+            if (value >= 2.5) return 'C';
+            if (value >= 1.5) return 'D';
+            return 'E';
+        }
+
+        function getTierDescription(tier) {
+            const descriptions = {
+                'X': 'Legendary Players',
+                'SS': 'Elite Players',
+                'S': 'High-Level Players',
+                'A': 'Above Average Players',
+                'B': 'Average Players',
+                'C': 'Below Average Players',
+                'D': 'Low-Level Players',
+                'E': 'Very Low-Level Players'
+            };
+            return descriptions[tier];
+        }
+
+        // This is used to Diplay the stats of a Player
+        function displayPlayerStats() 
+        {
+            const playerName = document.getElementById('search-player-stats').value;
+            const player = players.find(p => p.name === playerName);
+            if (player) 
+            {
+                document.getElementById('player-stats-content').innerHTML = `
+                    <strong>Name:</strong> ${player.name}<br>
+                    <strong>Description:</strong> ${player.description}<br>
+                    <strong>Speed:</strong> ${player.speed}<br>
+                    <strong>Endurance:</strong> ${player.endurance}<br>
+                    <strong>Combat Skills:</strong> ${player.combat}<br>
+                    <strong>Tactical Thinking:</strong> ${player.tactical}<br>
+                    <strong>Adaptability:</strong> ${player.adaptability}<br>
+                    <strong>Experience:</strong> ${player.knowledge}<br>
+                    <strong>Duel Score:</strong> ${player.duelScore}<br>
+                    <strong>Win:</strong> ${player.win}<br>
+                    <strong>Loss:</strong> ${player.loss}<br>
+                    <strong>Draw:</strong> ${player.draw}
+                `;
+                document.getElementById('player-stats').hidden = false;
+            } 
+            else 
+            {
+                alert('Player not found!');
+                document.getElementById('player-stats').hidden = true;
+            }
+        }
+
+        // Call displayPlayers when the page loads
+        window.onload = function() 
+        {
+            displayPlayers();
+        }
+    </script>
+</body>
+</html>

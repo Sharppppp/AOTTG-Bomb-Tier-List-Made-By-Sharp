@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AOTTG Bomb Tier List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AOTTG Bomb Tier List</h1>
+        <p>Made By Sharp</p>
+
+        <!--This is to navigate between the Tabs-->
+        <div class="nav">
+            <button onclick="navigateTo('index.html')">Main Page</button>
+            <button onclick="navigateTo('AddPlayerPage.html')">Add Player</button>
+            <button onclick="navigateTo('PlayerTierlistPage.html')">Player Tierlist</button>
+            <button onclick="navigateTo('TopPlayersPage.html')">Top Players</button>
+            <button onclick="navigateTo('DuelResultsPage.html')">Duel Results</button>
+            <button onclick="navigateTo('DuelScorePage.html')">Duel Tierlist</button>
+        </div>
+
+        <!--This is the design to Record a Duel-->
+        <form id="duel-form">
+            <h1>Record Duel</h1>
+            <p>Please send your Duels into Ph3x discord server and Tag me so that I can Input it into my list!</p>
+            <div class="duel-container">
+                <div>
+                    <label>Player</label>
+                    <select id="player1-name" required></select>
+                    <label>Score</label>
+                    <input type="number" id="player1-score" min="0" max="20" required>
+                </div>
+                <div>
+                    <label>VS</label>
+                </div>
+                <div>
+                    <label>Player</label>
+                    <select id="player2-name" required></select>
+                    <label>Score</label>
+                    <input type="number" id="player2-score" min="0" max="20" required>
+                </div>
+            </div>
+            <button type="submit">Record Duel</button>
+        </form>
+    </div>
+
+    <!--This is the explanation how the Duel Score calculation works-->
+    <div id="calculation-explanation" class="page">
+        <h1>How the Calculation Works?</h1>
+        <section id="rank-multiplier">
+            <h2>Rank Multiplier Calculation:</h2>
+            <p>Each rank (E, D, C, B, A, S, SS, X) is assigned an index.</p>
+            <p>The difference in rank indices between two players is calculated.</p>
+            <p>The rank multiplier is derived from this difference plus one.</p>
+        </section>
+    
+        <section id="score-calculation">
+            <h2>Score Calculation:</h2>
+            <p>If both players have the same rank, their duel scores are adjusted based on the ratio of their scores.</p>
+            <p>If players have different ranks, the rank multiplier affects the score adjustments. Winning against a higher-ranked player gives a larger score boost than winning against a lower-ranked player.</p>
+        </section>
+    
+        <section id="duel-outcome">
+            <h2>Duel Outcome:</h2>
+            <p>Wins, losses, and draws are recorded for each player.</p>
+            <p>Duel scores are adjusted based on the match results and rank multiplier.</p>
+        </section>
+    </div>
+    
+
+    <script src="utils.js"></script>
+    <script>
+        // Function to calculate the rank difference and rank multiplier
+        function calculateRankMultiplier(player1Rank, player2Rank) {
+            const ranks = ['E', 'D', 'C', 'B', 'A', 'S', 'SS', 'X'];
+            const player1RankIndex = ranks.indexOf(player1Rank);
+            const player2RankIndex = ranks.indexOf(player2Rank);
+
+            if (player1RankIndex === -1 || player2RankIndex === -1) {
+                console.error('Rank not found:', { player1Rank, player2Rank });
+                return 1; // Return a default multiplier if rank is not found
+            }
+
+            const rankDifference = Math.abs(player1RankIndex - player2RankIndex);
+            const rankMultiplier = rankDifference + 1;
+
+            console.log('Rank Difference:', rankDifference);
+            console.log('Rank Multiplier:', rankMultiplier);
+
+            return rankMultiplier;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const duelForm = document.getElementById('duel-form');
+            const player1Select = document.getElementById('player1-name');
+            const player2Select = document.getElementById('player2-name');
+
+            const players = loadData('PlayerData') || [];
+
+            function populatePlayerOptions() {
+                players.forEach(player => {
+                    const option1 = document.createElement('option');
+                    option1.value = player.name;
+                    option1.textContent = player.name;
+                    player1Select.appendChild(option1);
+
+                    const option2 = document.createElement('option');
+                    option2.value = player.name;
+                    option2.textContent = player.name;
+                    player2Select.appendChild(option2);
+                });
+            }
+
+            populatePlayerOptions();
+
+            duelForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const player1Name = player1Select.value;
+                const player2Name = player2Select.value;
+                const player1Score = parseInt(document.getElementById('player1-score').value, 10);
+                const player2Score = parseInt(document.getElementById('player2-score').value, 10);
+
+                if (player1Name === player2Name) {
+                    alert('A player cannot duel themselves!');
+                    return;
+                }
+
+                const player1 = players.find(p => p.name === player1Name);
+                const player2 = players.find(p => p.name === player2Name);
+
+                if (!player1 || !player2) {
+                    alert('Both players must be selected!');
+                    return;
+                }
+
+                console.log('Player 1:', player1);
+                console.log('Player 2:', player2);
+
+                if (!player1.rank || !player2.rank) {
+                    console.error('Player rank is undefined:', { player1Rank: player1.rank, player2Rank: player2.rank });
+                    alert('One or both players do not have a rank!');
+                    return;
+                }
+
+                // Calculate rank multiplier
+                const rankMultiplier = calculateRankMultiplier(player1.rank, player2.rank);
+
+                // Determine the result of the duel
+                if (player1Score > player2Score) {
+                    player1.win++;
+                    player2.loss++;
+                } else if (player1Score < player2Score) {
+                    player1.loss++;
+                    player2.win++;
+                } else {
+                    player1.draw++;
+                    player2.draw++;
+                }
+
+                // Calculate duel scores
+                const ranks = ['E', 'D', 'C', 'B', 'A', 'S', 'SS', 'X'];
+                if (player1.rank === player2.rank) {
+                    if (player1Score > player2Score) {
+                        player1.duelScore += (player1Score / player2Score);
+                        player2.duelScore -= (1 - (player2Score / player1Score));
+                    } else if (player1Score < player2Score) {
+                        player2.duelScore += (player2Score / player1Score);
+                        player1.duelScore -= (1 - (player1Score / player2Score));
+                    }
+                } else {
+                    if (ranks.indexOf(player1.rank) < ranks.indexOf(player2.rank)) {
+                        if (player1Score > player2Score) {
+                            player1.duelScore += (player1Score / player2Score) * rankMultiplier;
+                            player2.duelScore -= (1 - (player2Score / player1Score)) / rankMultiplier;
+                        } else {
+                            player2.duelScore += (player2Score / player1Score) / rankMultiplier;
+                            player1.duelScore -= (1 - (player1Score / player2Score)) * rankMultiplier;
+                        }
+                    } else {
+                        if (player2Score > player1Score) {
+                            player2.duelScore += (player2Score / player1Score) * rankMultiplier;
+                            player1.duelScore -= (1 - (player1Score / player2Score)) / rankMultiplier;
+                        } else {
+                            player1.duelScore += (player1Score / player2Score) / rankMultiplier;
+                            player2.duelScore -= (1 - (player2Score / player1Score)) * rankMultiplier;
+                        }
+                    }
+                }
+
+                // Ensure duel scores do not go below 0
+                // player1.duelScore = Math.max(0, player1.duelScore);
+                // player2.duelScore = Math.max(0, player2.duelScore);
+
+                saveData('PlayerData', players);
+                alert('Duel recorded successfully!');
+
+                duelForm.reset();
+            });
+        });
+    </script>
+</body>
+</html>

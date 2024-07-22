@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AOTTG Bomb Tier List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AOTTG Bomb Tier List</h1>
+        <p>Made By Sharp</p>
+
+        <!--This is to navigate between the Tabs-->
+        <div class="nav">
+            <button onclick="navigateTo('index.html')">Main Page</button>
+            <button onclick="navigateTo('AddPlayerPage.html')">Add Player</button>
+            <button onclick="navigateTo('PlayerTierlistPage.html')">Player Tierlist</button>
+            <button onclick="navigateTo('TopPlayersPage.html')">Top Players</button>
+            <button onclick="navigateTo('DuelResultsPage.html')">Duel Results</button>
+            <button onclick="navigateTo('DuelScorePage.html')">Duel Tierlist</button>
+        </div>
+
+        <!--Top Players Display-->
+        <div class="top-players" id="top-players">
+            <h2>Top Players</h2>
+        </div>
+
+    <script src="utils.js"></script>
+    <script>
+        // Initialize players from local storage
+        const players = loadData('PlayerData') || [];
+
+        // Function to display top players sorted by duelScore
+        function displayTopPlayers() {
+            const topPlayersContainer = document.getElementById('top-players');
+
+            // Ensure every player has a duelScore, defaulting to 0 if not present
+            players.forEach(player => {
+                if (typeof player.duelScore === 'undefined' || player.duelScore === null) {
+                    player.duelScore = 0;
+                } else if (typeof player.duelScore === 'string') {
+                    player.duelScore = parseFloat(player.duelScore);
+                }
+            });
+
+            // Sort players by duelScore in descending order
+            players.sort((a, b) => b.duelScore - a.duelScore);
+
+            // Display sorted players
+            topPlayersContainer.innerHTML = '<h2>Top Players</h2>';
+            players.forEach((player, index) => {
+                const playerElement = document.createElement('div');
+                playerElement.classList.add('top-player');
+                playerElement.dataset.index = index;
+                playerElement.innerHTML = `<span>Top ${index + 1}: ${player.name} (Duel Score: ${player.duelScore.toFixed(2)})</span>`;
+                topPlayersContainer.appendChild(playerElement);
+            });
+        }
+
+        // Call displayTopPlayers when the page loads
+        window.onload = function() {
+            displayTopPlayers();
+        }
+    </script>
+</body>
+</html>
