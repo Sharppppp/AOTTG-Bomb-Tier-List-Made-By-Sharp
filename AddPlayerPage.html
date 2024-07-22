@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AOTTG Bomb Tier List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AOTTG Bomb Tier List</h1>
+        <p>Made By Sharp</p>
+        <!--This is to navigate between the Tabs-->
+        <div class="nav">
+            <button onclick="navigateTo('MainPage.html')">Main Page</button>
+            <button onclick="navigateTo('AddPlayerPage.html')">Add Player</button>
+            <button onclick="navigateTo('PlayerTierlistPage.html')">Player Tierlist</button>
+            <button onclick="navigateTo('TopPlayersPage.html')">Top Players</button>
+            <button onclick="navigateTo('DuelResultsPage.html')">Duel Results</button>
+            <button onclick="navigateTo('DuelScorePage.html')">Duel Tierlist</button>
+        </div>
+
+        <h1>Add or Update the Player</h1>
+        <p>Here you can see the criteria I use to add players.</p>
+
+        <!--These are the options I have to choose so that I can rank People -->
+        <div class="container">
+            <form id="player-form">
+                <label for="player-name">Player Name:</label>
+                <input type="text" id="player-name" required>
+                <textarea id="description" placeholder="Description"></textarea>
+    
+                <h1>Mechanical</h1>
+                <label for="speed">Speed:</label>
+                <select id="speed" required >
+                    <option value="X">X - Inhuman</option>
+                    <option value="SS">SS - Very High</option>
+                    <option value="S">S - High</option>
+                    <option value="A" >A - Above Average</option>
+                    <option value="B">B - Average</option>
+                    <option value="C">C - Below Average</option>
+                    <option value="D">D - Low</option>
+                    <option value="E">E - Very Low</option>
+                </select>
+                <p>Movement Speed: How quickly a player can move around the map.<br>Reaction Time: How fast a player can respond to threats and opportunities.</p>
+    
+                <label for="endurance">Endurance:</label>
+                <select id="endurance" required>
+                    <option value="X">X - Inhuman</option>
+                    <option value="SS">SS - Very High</option>
+                    <option value="S">S - High</option>
+                    <option value="A">A - Above Average</option>
+                    <option value="B">B - Average</option>
+                    <option value="C">C - Below Average</option>
+                    <option value="D">D - Low</option>
+                    <option value="E">E - Very Low</option>
+                </select>
+                <p>Stamina: Ability to sustain high performance over time.<br>Consistency: Reliability in maintaining performance throughout the game.</p>
+    
+                <label for="combat">Combat Skills:</label>
+                <select id="combat" required>
+                    <option value="X">X - Inhuman</option>
+                    <option value="SS">SS - Very High</option>
+                    <option value="S">S - High</option>
+                    <option value="A">A - Above Average</option>
+                    <option value="B">B - Average</option>
+                    <option value="C">C - Below Average</option>
+                    <option value="D">D - Low</option>
+                    <option value="E">E - Very Low</option>
+                </select>
+                <p>Accuracy: Precision in hitting targets.<br>Maneuverability: Skill in moving without crashing while attaking and positioning advantageously.<br>Timing: Proper timing of attacks.</p>
+                <br>
+                <h1>Brain</h1>
+                 <label for="tactical">Tactical Thinking:</label>
+                <select id="tactical" required>
+                    <option value="X">X - Inhuman</option>
+                    <option value="SS">SS - Very High</option>
+                    <option value="S">S - High</option>
+                    <option value="A">A - Above Average</option>
+                    <option value="B">B - Average</option>
+                    <option value="C">C - Below Average</option>
+                    <option value="D">D - Low</option>
+                    <option value="E">E - Very Low</option>
+                </select>
+                <p>Situational Awareness: Understanding the game environment and the positions of other players.<br>Decision Making: Ability to make quick and effective decisions under pressure.<br>Strategic Planning: Long-term planning and anticipating opponent moves.</p>
+    
+                <label for="adaptability">Adaptability:</label>
+                <select id="adaptability" required>
+                    <option value="X">X - Inhuman</option>
+                    <option value="SS">SS - Very High</option>
+                    <option value="S">S - High</option>
+                    <option value="A">A - Above Average</option>
+                    <option value="B">B - Average</option>
+                    <option value="C">C - Below Average</option>
+                    <option value="D">D - Low</option>
+                    <option value="E">E - Very Low</option>
+                </select>
+                <p>Versatility: Ability to adapt to different situations and opponents.<br>Playstyle: Adaptability of a Player to play a specific playstyle (Sniper, Agressive, etc..)</p>
+    
+    
+                <label for="knowledge">Experience:</label>
+                <select id="knowledge" required>
+                    <option value="X">X - Inhuman</option>
+                    <option value="SS">SS - Very High</option>
+                    <option value="S">S - High</option>
+                    <option value="A">A - Above Average</option>
+                    <option value="B">B - Average</option>
+                    <option value="C">C - Below Average</option>
+                    <option value="D">D - Low</option>
+                    <option value="E">E - Very Low</option>
+                </select>
+                <p>Map Knowledge: Familiarity with the map layout.<br>Mechanics Understanding: Mastery of the game's mechanics and how to exploit them effectively.</p>
+                <button type="submit">Add Player</button>
+            </form>
+    
+            <br>
+
+            <!--Search Bar to Delete and Load Players -->
+            <form id="player-search-form">
+                <label for="search-player-name">Search Player Name:</label>
+                <input type="text" id="search-player-name" required>
+                <button type="button" id="load-player">Load Player</button>
+                <button type="button" id="delete-player">Delete Player</button>
+            </form>
+
+    <script src="utils.js"></script>
+    <script>
+        // Get Data
+        const playerForm = document.getElementById('player-form');
+        const playerSearchForm = document.getElementById('player-search-form');
+
+        // Initialize players from local storage
+        const players = loadData('PlayerData') || [];
+
+        playerForm.addEventListener('submit', function(event) 
+        {
+            event.preventDefault();
+            const name = document.getElementById('player-name').value;
+            const description = document.getElementById('description').value;
+            const speed = document.getElementById('speed').value;
+            const endurance = document.getElementById('endurance').value;
+            const combat = document.getElementById('combat').value;
+            const tactical = document.getElementById('tactical').value;
+            const adaptability = document.getElementById('adaptability').value;
+            const knowledge = document.getElementById('knowledge').value;
+
+            let players = loadData('PlayerData') || [];
+
+            const existingIndex = players.findIndex(p => p.name === name);
+            if (existingIndex !== -1) 
+            {
+                // Preserve existing stats and update player information
+                const existingPlayer = players[existingIndex];
+                existingPlayer.description = description;
+                existingPlayer.speed = speed;
+                existingPlayer.endurance = endurance;
+                existingPlayer.combat = combat;
+                existingPlayer.tactical = tactical;
+                existingPlayer.adaptability = adaptability;
+                existingPlayer.knowledge = knowledge;
+                alert('Player updated successfully!');
+            } 
+            else 
+            {
+                // Add new player
+                const player = 
+                {
+                    name,
+                    description,
+                    speed,
+                    endurance,
+                    combat,
+                    tactical,
+                    adaptability,
+                    knowledge,
+                    rank: null,
+                    win: 0,
+                    loss: 0,
+                    draw: 0,
+                    duelScore: 0
+                };
+                players.push(player); 
+                alert('Player added successfully!');
+            }
+
+            // Saves Player to Local storage
+            saveData('PlayerData', players);
+
+            // Reset the Options 
+            playerForm.reset();
+        });
+
+        playerSearchForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+        });
+
+        // Load a Player to Edit
+        document.getElementById('load-player').addEventListener('click', function() {
+            const searchName = document.getElementById('search-player-name').value;
+            const player = players.find(p => p.name === searchName);
+            if (player) 
+            {
+                document.getElementById('player-name').value = player.name;
+                document.getElementById('description').value = player.description;
+                document.getElementById('speed').value = player.speed;
+                document.getElementById('endurance').value = player.endurance;
+                document.getElementById('combat').value = player.combat;
+                document.getElementById('tactical').value = player.tactical;
+                document.getElementById('adaptability').value = player.adaptability;
+                document.getElementById('knowledge').value = player.knowledge;
+                
+            } 
+            else 
+            {
+                alert('Player not found');
+            }
+        });
+
+        // Delete a Player
+        document.getElementById('delete-player').addEventListener('click', function() 
+        {
+            const searchName = document.getElementById('search-player-name').value;
+            const index = players.findIndex(p => p.name === searchName);
+            if (index !== -1)
+            {
+                players.splice(index, 1);
+                // Save updated players list to local storage
+                saveData('PlayerData', players);
+                alert('Player deleted successfully!');
+            } 
+            else 
+            {
+                alert('Player not found');
+            }
+        });
+
+    </script>
+</body>
+</html>
