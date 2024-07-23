@@ -1,7 +1,0 @@
-Name: Suka, Rank: SS, Duel Score: 0
-Name: Miro, Rank: S, Duel Score: 0
-Name: Bruh, Rank: A, Duel Score: 0
-Name: Sharp, Rank: A, Duel Score: 0
-Name: fabiasheen, Rank: A, Duel Score: 0
-Name: J, Rank: B, Duel Score: 0
-Name: Zero1, Rank: C, Duel Score: 0
