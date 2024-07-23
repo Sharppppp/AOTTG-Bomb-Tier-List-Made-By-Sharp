@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AOTTG Bomb Tier List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AOTTG Bomb Tier List</h1>
+        <p>Made By Sharp</p>
+
+        <!-- This is to navigate between the Tabs -->
+        <div class="nav">
+            <button onclick="navigateTo('index.html')">Main Page</button>
+            <button onclick="navigateTo('AddPlayerPage.html')">Add Player</button>
+            <button onclick="navigateTo('PlayerTierlistPage.html')">Player Tierlist</button>
+            <button onclick="navigateTo('TopPlayersPage.html')">Top Players</button>
+            <button onclick="navigateTo('DuelResultsPage.html')">Duel Results</button>
+            <button onclick="navigateTo('DuelScorePage.html')">Duel Tierlist</button>
+        </div>
+
+        <!-- This shows Top Players sorted by avgPoints -->
+        <div class="top-players">
+            <h2>Top Players (Avg Points)</h2>
+            <p>This List was made by looking at the avgPoints (max 8.00) based on your ranks at each category!</p>
+            <div id="top-players-list-avg"></div>
+        </div>
+
+        <!-- This shows Top Players sorted by Me -->
+        <div class="top-players">
+            <h2>Top Players (My Opinion)</h2>
+            <p>This List was made by me based on my opinion!</p>
+            <div id="top-players-list-opinion"></div>
+        </div>
+
+    </div>
+    <script src="utils.js"></script>
+    <script>
+
+        let players = [];
+        let opinionPlayers = [];
+
+        const topPlayersListAvg = document.getElementById('top-players-list-avg');
+        const topPlayersListOpinion = document.getElementById('top-players-list-opinion');
+
+        async function loadPlayers() {
+            players = await fetchPlayerDataFromGitHub();
+            opinionPlayers = await fetchOpinionDataFromGitHub();
+            updateTopPlayers(topPlayersListAvg, players.sort(sortByAvgPoints));
+            updateTopPlayers(topPlayersListOpinion, opinionPlayers);
+        }
+
+        function rankToValue(rank) {
+            const values = {
+                'X': 8,
+                'SS': 7,
+                'S': 6,
+                'A': 5,
+                'B': 4,
+                'C': 3,
+                'D': 2,
+                'E': 1
+            };
+            return values[rank];
+        }
+
+        function valueToRank(value) {
+            if (value >= 7.5) return 'X';
+            if (value >= 6.5) return 'SS';
+            if (value >= 5.5) return 'S';
+            if (value >= 4.5) return 'A';
+            if (value >= 3.5) return 'B';
+            if (value >= 2.5) return 'C';
+            if (value >= 1.5) return 'D';
+            return 'E';
+        }
+
+        function updateTopPlayers(listElement, playersToDisplay) {
+            listElement.innerHTML = '';
+
+            playersToDisplay.forEach((player, index) => {
+                const playerElement = document.createElement('div');
+                playerElement.classList.add('top-player');
+                playerElement.dataset.index = index;
+                if(listElement === topPlayersListAvg)
+                {
+                    playerElement.innerHTML = `<span>Top ${index + 1}: ${player.name} (AvgPoints: ${player.avgPoints.toFixed(2)})</span>`;
+                }
+                else
+                {
+                    playerElement.innerHTML = `<span>Top ${index + 1}: ${player.name}</span>`;
+                }
+
+                listElement.appendChild(playerElement);
+            });
+        }
+
+        function sortByAvgPoints(a, b) {
+            const avgRankA = (rankToValue(a.speed) + rankToValue(a.endurance) + rankToValue(a.combat) + rankToValue(a.tactical) + rankToValue(a.adaptability) + rankToValue(a.knowledge)) / 6;
+            const avgRankB = (rankToValue(b.speed) + rankToValue(b.endurance) + rankToValue(b.combat) + rankToValue(b.tactical) + rankToValue(b.adaptability) + rankToValue(b.knowledge)) / 6;
+            return avgRankB - avgRankA;
+        }
+
+        // Call updateTopPlayers when the page loads for both lists
+        window.onload = function() 
+        {
+            loadPlayers();
+        }
+
+    </script>
+</body>
+</html>

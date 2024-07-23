@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AOTTG Bomb Tier List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AOTTG Bomb Tier List</h1>
+        <p>Made By Sharp</p>
+
+        <!--This is to navigate between the Tabs-->
+        <div class="nav">
+            <button onclick="navigateTo('index.html')">Main Page</button>
+            <button onclick="navigateTo('AddPlayerPage.html')">Add Player</button>
+            <button onclick="navigateTo('PlayerTierlistPage.html')">Player Tierlist</button>
+            <button onclick="navigateTo('TopPlayersPage.html')">Top Players</button>
+            <button onclick="navigateTo('DuelResultsPage.html')">Duel Results</button>
+            <button onclick="navigateTo('DuelScorePage.html')">Duel Tierlist</button>
+        </div>
+        <h1>Record Duel</h1>
+        <p>Please send your Duels into Ph3x's discord server and Tag me so that I can Input it into my list!</p>
+
+         <!--This is the explanation how the Duel Score calculation works-->
+        <div id="calculation-explanation" class="page">
+            <h1>How Does The Calculation Work?</h1>
+            <section id="rank-multiplier">
+                <h2>Rank Multiplier Calculation:</h2>
+                <p>Each rank (E, D, C, B, A, S, SS, X) is assigned an index.</p>
+                <p>The difference in rank indices between two players is calculated.</p>
+                <p>The rank multiplier is derived from this difference plus one.</p>
+                <p>For example if a SS player plays against an A player then the rank multiplier is 3 because of the 2 difference + 1</p>
+            </section>
+        
+            <section id="score-calculation">
+                <h2>Score Calculation:</h2>
+                <p>If both players have the same rank, their duel scores are adjusted based on the ratio of their scores.</p>
+                <p>If players have different ranks, the rank multiplier affects the score adjustments. Winning against a higher-ranked player gives a larger score boost, while losing to a lower-ranked player results in a greater score penalty.</p>
+            </section>
+        
+            <section id="duel-outcome">
+                <h2>Duel Outcome:</h2>
+                <p>Wins, losses, and draws are recorded for each player.</p>
+                <p>Duel scores are adjusted based on the match results and rank multiplier.</p>
+            </section>
+        </div>
+    </div>
+    
+
+    <script src="utils.js"></script>
+    <script>
+
+    </script>
+</body>
+</html>
