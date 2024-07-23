@@ -1,7 +1,0 @@
-Name: Sharp, Rank: A, Wins: 0, Losses: 0, Draws: 0, Duel Score: 0
-Name: J, Rank: B, Wins: 0, Losses: 0, Draws: 0, Duel Score: 0
-Name: Bruh, Rank: A, Wins: 0, Losses: 0, Draws: 0, Duel Score: 0
-Name: Suka, Rank: SS, Wins: 0, Losses: 0, Draws: 0, Duel Score: 0
-Name: Zero1, Rank: C, Wins: 0, Losses: 0, Draws: 0, Duel Score: 0
-Name: Miro, Rank: S, Wins: 0, Losses: 0, Draws: 0, Duel Score: 0
-Name: fabiasheen, Rank: A, Wins: 0, Losses: 0, Draws: 0, Duel Score: 0
