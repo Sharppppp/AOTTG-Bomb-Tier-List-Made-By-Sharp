@@ -60,22 +60,21 @@ function parseOpinionData(text) {
     const lines = text.trim().split('\n');
     
     const players = lines.map(line => {
-        const match = line.match(/Name: ([^,]+), Description: ([^,]+), Rank: ([^,]+), Speed: ([^,]+), Endurance: ([^,]+), Combat: ([^,]+), Tactical: ([^,]+), Adaptability: ([^,]+), Experience: ([^,]+), Duel Score: (\d+), Wins: (\d+), Losses: (\d+), Draws: (\d+)/);
+        const match = line.match(/Name: ([^,]+), Rank: ([^,]+), Speed: ([^,]+), Endurance: ([^,]+), Combat: ([^,]+), Tactical: ([^,]+), Adaptability: ([^,]+), Experience: ([^,]+), Duel Score: (\d+), Wins: (\d+), Losses: (\d+), Draws: (\d+)/);
         if (match) {
             return {
                 name: match[1].trim(),
-                description: match[2].trim(),
-                rank: match[3].trim(),
-                speed: match[4].trim(),
-                endurance: match[5].trim(),
-                combat: match[6].trim(),
-                tactical: match[7].trim(),
-                adaptability: match[8].trim(),
-                knowledge: match[9].trim(),
-                duelScore: parseInt(match[10].trim(), 10),
-                win: parseInt(match[11].trim(), 10),
-                loss: parseInt(match[12].trim(), 10),
-                draw: parseInt(match[13].trim(), 10)
+                rank: match[2].trim(),
+                speed: match[3].trim(),
+                endurance: match[4].trim(),
+                combat: match[5].trim(),
+                tactical: match[6].trim(),
+                adaptability: match[7].trim(),
+                knowledge: match[8].trim(),
+                duelScore: parseInt(match[9].trim(), 10),
+                win: parseInt(match[10].trim(), 10),
+                loss: parseInt(match[11].trim(), 10),
+                draw: parseInt(match[12].trim(), 10)
             };
         }
         return null;
